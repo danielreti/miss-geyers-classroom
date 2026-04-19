@@ -1,0 +1,22 @@
+timer
+dice with options for sided-ness
+random number generator
+pick random from list - sounds/animations
+	with/without repetition
+different sizes groups
+stopwatch
+poll
+	multiple choice
+	emotions
+	yes/no
+sound level meter
+drop in images/text/videos
+timetable/schedule
+google slides integration
+draw
+	shapes
+	eraser
+	different sizes pens
+	highlight
+visual timer
+countdown timer

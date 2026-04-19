@@ -1,0 +1,22 @@
+.homepage-wrapper {
+    display: grid;
+    place-content: center;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4.5rem;
+    height: calc(100vh - 4.5rem);
+}
+
+.homepage-title {
+    color: #222;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem 0;
+    text-align: center;
+}
+
+.homepage-desc {
+    color: #444;
+    font-size: 1.25rem;
+    text-align: center;
+}
