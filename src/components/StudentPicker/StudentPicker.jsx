@@ -1,39 +1,6 @@
 import React, { useState, useRef } from "react";
 import "./StudentPicker.css";
 
-const NAMES = [
-    "Ava",
-    "Ben",
-    "Chloe",
-    "Daniel",
-    "Ella",
-    "Finn",
-    "Grace",
-    "Henry",
-    "Isla",
-    "Jack",
-    "Kara",
-    "Liam",
-    "Mia",
-    "Noah",
-    "Olivia",
-    "Paul",
-    "Quinn",
-    "Ruby",
-    "Sam",
-    "Tara",
-    "Uma",
-    "Vera",
-    "Will",
-    "Xander",
-    "Yara",
-    "Zane",
-    "Sophie",
-    "Leo",
-    "Hazel",
-    "Miles",
-];
-
 function shuffle(array) {
     const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
@@ -43,7 +10,7 @@ function shuffle(array) {
     return arr;
 }
 
-const StudentPicker = () => {
+const StudentPicker = ({ studentList }) => {
     const [count, setCount] = useState(1);
     const [animating, setAnimating] = useState(false);
     const [result, setResult] = useState([]);
@@ -56,7 +23,9 @@ const StudentPicker = () => {
     const handleCountChange = (e) => {
         let val = parseInt(e.target.value, 10);
         if (isNaN(val) || val < 1) val = 1;
-        let maxCount = neverExclude ? NAMES.length : NAMES.length - used.length;
+        let maxCount = neverExclude
+            ? studentList.length
+            : studentList.length - used.length;
         if (val > maxCount) val = maxCount;
         setCount(val);
         setSlotIndexes(Array(val).fill(0));
@@ -68,13 +37,13 @@ const StudentPicker = () => {
         setSlotIndexes(Array(slotCount).fill(0));
         // Determine available names based on neverExclude
         const availableNames = neverExclude
-            ? NAMES
-            : NAMES.filter((n) => !used.includes(n));
+            ? studentList
+            : studentList.filter((n) => !used.includes(n));
         if (!animationOn) {
             // No animation, just pick instantly
             const picked = shuffle(availableNames).slice(0, slotCount);
             setResult(picked);
-            setSlotIndexes(picked.map((name) => NAMES.indexOf(name)));
+            setSlotIndexes(picked.map((name) => studentList.indexOf(name)));
             if (!neverExclude) setUsed((prev) => [...prev, ...picked]);
             setAnimating(false);
             return;
@@ -92,7 +61,7 @@ const StudentPicker = () => {
                 clearInterval(intervalRef.current);
                 const picked = shuffle(availableNames).slice(0, slotCount);
                 setResult(picked);
-                setSlotIndexes(picked.map((name) => NAMES.indexOf(name)));
+                setSlotIndexes(picked.map((name) => studentList.indexOf(name)));
                 if (!neverExclude) setUsed((prev) => [...prev, ...picked]);
                 setAnimating(false);
             }
@@ -143,15 +112,16 @@ const StudentPicker = () => {
                         min={1}
                         max={
                             neverExclude
-                                ? NAMES.length
-                                : NAMES.length - used.length
+                                ? studentList.length
+                                : studentList.length - used.length
                         }
                         value={count}
                         onChange={handleCountChange}
                         className="student-picker-input"
                         disabled={
                             animating ||
-                            (!neverExclude && NAMES.length - used.length === 0)
+                            (!neverExclude &&
+                                studentList.length - used.length === 0)
                         }
                     />
                     student{count > 1 ? "s" : "\u00A0"}
@@ -161,7 +131,7 @@ const StudentPicker = () => {
                             disabled={
                                 animating ||
                                 (!neverExclude &&
-                                    NAMES.length - used.length === 0)
+                                    studentList.length - used.length === 0)
                             }
                             className="student-picker-pick-btn"
                         >
@@ -186,8 +156,8 @@ const StudentPicker = () => {
                                     <span>
                                         {
                                             (neverExclude
-                                                ? NAMES
-                                                : NAMES.filter(
+                                                ? studentList
+                                                : studentList.filter(
                                                       (n) => !used.includes(n),
                                                   ))[idx]
                                         }
@@ -234,7 +204,7 @@ const StudentPicker = () => {
                                 setUsed([]); // reset used if toggling
                             }}
                         />
-                        Allow repeats students (never exclude)
+                        Allow repeat students (never exclude)
                     </label>
                 </div>
             </div>

@@ -1,0 +1,101 @@
+.countdown-timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 120px;
+}
+
+.countdown-timer-input-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.countdown-timer-controls-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.countdown-timer-stop-btn,
+.countdown-timer-reset-btn,
+.countdown-timer-add-btn {
+    font-size: 1.2rem;
+    padding: 0.4rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    background: #eee;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.countdown-timer-stop-btn:disabled,
+.countdown-timer-reset-btn:disabled,
+.countdown-timer-add-btn:disabled {
+    background: #ddd;
+    color: #aaa;
+    cursor: not-allowed;
+}
+.countdown-timer-stop-btn:not(:disabled):hover {
+    background: #ffb3b3;
+}
+.countdown-timer-reset-btn:not(:disabled):hover {
+    background: #b3d1ff;
+}
+.countdown-timer-add-btn:not(:disabled):hover {
+    background: #b3ffb3;
+}
+
+.countdown-timer-input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.countdown-timer-input {
+    font-size: 2rem;
+    width: 350px;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid #aaa;
+    padding: 0.4rem 1rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.2rem;
+}
+
+.countdown-timer-labels {
+    display: flex;
+    gap: 0.7rem;
+    font-size: 1.1rem;
+    color: #888;
+    font-variant-numeric: tabular-nums;
+    justify-content: center;
+}
+
+.countdown-timer-start-btn {
+    font-size: 1.2rem;
+    padding: 0.4rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    background: #646cff;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.countdown-timer-start-btn:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+.countdown-timer-circle {
+    margin-top: 1.5rem;
+}
+
+.countdown-timer-time {
+    font-size: 60px;
+    font-weight: 600;
+    color: #646cff;
+    font-variant-numeric: tabular-nums;
+}

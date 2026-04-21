@@ -31,6 +31,12 @@ export default function Banner() {
             </Link>
 
             <Link
+                to="/timer"
+                className={`banner-link${location.pathname === "/timer" ? " active" : ""}`}
+            >
+                Countdown Timer
+            </Link>
+            <Link
                 to="/beatGame"
                 className={`banner-link${location.pathname === "/beatGame" ? " active" : ""}`}
             >

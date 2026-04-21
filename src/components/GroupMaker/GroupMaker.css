@@ -4,6 +4,100 @@
     align-items: center;
     margin-top: 120px;
     /* min-height: 80vh; */
+    position: relative;
+}
+
+.rules-panel-outer {
+    position: fixed;
+    top: 120px;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.rules-panel-toggle {
+    background: #fff;
+    border: 1px solid #646cff;
+    border-radius: 8px 0 0 8px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(100, 108, 255, 0.1);
+    margin-bottom: 2px;
+}
+.rules-panel-plus {
+    font-size: 2rem;
+    color: #646cff;
+    font-weight: bold;
+    line-height: 1;
+}
+.rules-panel-box {
+    background: #fff;
+    border: 1px solid #646cff;
+    border-radius: 8px 0 0 8px;
+    min-width: 260px;
+    padding: 18px 18px 12px 18px;
+    box-shadow: 0 2px 8px rgba(100, 108, 255, 0.1);
+    margin-right: 0;
+}
+.rules-panel-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #222;
+}
+.rules-panel-rule-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 8px;
+}
+.rules-panel-dropdown {
+    font-size: 1rem;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+}
+.rules-panel-cant {
+    color: #888;
+    font-size: 1rem;
+}
+.rules-panel-remove {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1.2rem;
+    margin-left: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+.rules-panel-remove:hover {
+    background: #ffeaea;
+}
+.rules-panel-add {
+    margin-top: 8px;
+    font-size: 1rem;
+    padding: 0.2rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid #646cff;
+    background: #f6f6ff;
+    color: #646cff;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.rules-panel-add:hover {
+    background: #646cff22;
+}
+.group-maker-error {
+    color: #dc3545;
+    font-weight: bold;
+    margin: 1rem 0;
+    font-size: 1.1rem;
 }
 
 .group-maker-sentence {
