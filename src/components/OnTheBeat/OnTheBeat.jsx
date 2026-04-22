@@ -13,27 +13,28 @@ const OnTheBeat = () => {
     const [submitted, setSubmitted] = useState(false);
     const [currentLevel, setCurrentLevel] = useState(0); // 0: easy, 1: medium, 2: hard
     const audioRef = useRef(null);
+    const [audioReady, setAudioReady] = useState(false);
 
     const easy = [
         [word1, word1, word1, word1, word1, word1, word1, word1],
         [word2, word2, word2, word2, word2, word2, word2, word2],
-        [word2, word1, word1, word2, word2, word1, word1, word2],
+        [word1, word2, word1, word2, word1, word2, word1, word2],
         [word2, word1, word2, word1, word2, word1, word2, word1],
-        [word1, word1, word2, word2, word1, word1, word2, word2],
+        [word1, word1, word1, word1, word2, word2, word2, word2],
     ];
     const medium = [
-        [word1, word1, word1, word1, word1, word1, word1, word1],
+        [word2, word2, word2, word2, word2, word2, word2, word2],
         [word3, word3, word3, word3, word3, word3, word3, word3],
-        [word3, word3, word3, word3, word1, word1, word1, word1],
-        [word3, word1, word3, word1, word3, word1, word3, word1],
-        [word1, word3, word1, word3, word1, word3, word1, word3],
+        [word2, word3, word2, word3, word2, word3, word2, word3],
+        [word1, word2, word3, word2, word1, word2, word3, word2],
+        [word1, word3, word1, word3, word1, word2, word1, word2],
     ];
     const hard = [
-        [word2, word2, word2, word2, word2, word2, word3, word2],
-        [word3, word3, word3, word3, word3, word3, word1, word3],
-        [word2, word1, word2, word3, word2, word1, word2, word3],
-        [word3, word2, word2, word3, word3, word2, word3, word2],
-        [word1, word1, word2, word2, word1, word3, word2, word1],
+        [word1, word1, word1, word2, word3, word3, word3, word2],
+        [word1, word1, word2, word2, word3, word3, word2, word2],
+        [word3, word1, word3, word2, word3, word1, word3, word2],
+        [word1, word2, word3, word1, word2, word3, word1, word2],
+        [word3, word3, word2, word1, word3, word1, word3, word2],
     ];
 
     // Animation timing: each roundDelay per round, 5 rounds per level
@@ -63,7 +64,7 @@ const OnTheBeat = () => {
     }, [submitted, currentLevel, showEnd]);
 
     const levelsArr = [easy, medium, hard];
-    const levelNames = ["EASY", "MEDIUM", "HARD"];
+    const levelNames = ["EASY", "MEDIUM", "ALMOST IMPOSSIBLE"];
 
     return (
         <div className="onthebeat-wrapper">
@@ -160,6 +161,7 @@ const OnTheBeat = () => {
                     />
                     <button
                         className="onthebeat-submit"
+                        disabled={!audioReady}
                         onClick={() => {
                             setSubmitted(true);
                             setCurrentLevel(0);
@@ -170,11 +172,11 @@ const OnTheBeat = () => {
                             }
                         }}
                     >
-                        Let's go!
+                        {audioReady ? "Let's go!" : "Loading audio..."}
                     </button>
                 </div>
             )}
-            <audio ref={audioRef} src={beatTrack} />
+            <audio ref={audioRef} src={beatTrack} preload="auto" onCanPlayThrough={() => setAudioReady(true)} />
         </div>
     );
 };
