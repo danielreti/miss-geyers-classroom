@@ -66,7 +66,7 @@ const GroupMaker = ({ studentList }) => {
 
     const handleGroupCountChange = (e) => {
         let val = parseInt(e.target.value, 10);
-        if (isNaN(val) || val < 1) val = 1;
+        // if (isNaN(val) || val < 1) val = 1;
         if (val > studentList.length) val = studentList.length;
         setGroupCount(val);
     };

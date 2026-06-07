@@ -94,8 +94,21 @@
 }
 
 .countdown-timer-time {
-    font-size: 60px;
+    font-size: 120px;
     font-weight: 600;
     color: #646cff;
     font-variant-numeric: tabular-nums;
+}
+
+@keyframes timer-flash {
+    0%,
+    100% {
+        background: transparent;
+    }
+    50% {
+        background: rgba(220, 53, 69, 0.25);
+    }
+}
+.countdown-timer-container.finished {
+    animation: timer-flash 0.6s ease-in-out 3;
 }

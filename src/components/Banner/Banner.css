@@ -25,6 +25,7 @@
     text-decoration: none;
     transition: background 0.2s;
     display: inline-block;
+    text-align: center;
 }
 
 .banner-link.active {

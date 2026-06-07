@@ -1,10 +1,42 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useRef } from "react";
 import "./Banner.css";
+import { useGamepadButton } from "../GamepadProvider.jsx";
+
+const TAB_ORDER = [
+    "/",
+    "/picker",
+    "/groups",
+    "/whiteboard",
+    "/timer",
+    "/beatGame",
+];
 
 export default function Banner() {
     const location = useLocation();
+    const navigate = useNavigate();
+
+    const navigateRef = useRef(navigate);
+    navigateRef.current = navigate;
+    const pathRef = useRef(location.pathname);
+    pathRef.current = location.pathname;
+
+    useGamepadButton(14, () => {
+        const idx = TAB_ORDER.indexOf(pathRef.current);
+        if (idx > 0) navigateRef.current(TAB_ORDER[idx - 1]);
+    });
+    useGamepadButton(15, () => {
+        const idx = TAB_ORDER.indexOf(pathRef.current);
+        if (idx >= 0 && idx < TAB_ORDER.length - 1)
+            navigateRef.current(TAB_ORDER[idx + 1]);
+    });
+
+    // const pad = navigator.getGamepads()[0];
+
     return (
         <nav className="banner-nav">
+            {/* {pad && JSON.stringify(pad.axes)} */}
+            {/* {pad && JSON.stringify(pad.buttons.map((b) => b.pressed))} */}
             <Link
                 to="/"
                 className={`banner-link${location.pathname === "/" ? " active" : ""}`}

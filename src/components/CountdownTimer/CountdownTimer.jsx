@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import "./CountdownTimer.css";
 
@@ -48,21 +48,25 @@ const CountdownTimer = () => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [key, setKey] = useState(0);
     const [initialDigits, setInitialDigits] = useState("000000");
+    const [finished, setFinished] = useState(false);
+    const remainingRef = useRef(0);
+    const [canResume, setCanResume] = useState(false);
 
-    // Handle digit input, always overwrite rightmost empty digit
     const handleDigitInput = (e) => {
         const val = e.target.value.replace(/\D/g, "");
         if (val.length > 6) return;
         setDigits(padTimeDigits(val));
+        setCanResume(false);
     };
 
-    // Handle key presses for digit entry (like a keypad)
     const handleKeyDown = (e) => {
         if (e.key >= "0" && e.key <= "9") {
             setDigits((prev) => padTimeDigits(prev.slice(1) + e.key));
+            setCanResume(false);
             e.preventDefault();
         } else if (e.key === "Backspace") {
             setDigits((prev) => padTimeDigits("0" + prev.slice(0, -1)));
+            setCanResume(false);
             e.preventDefault();
         }
     };
@@ -70,13 +74,11 @@ const CountdownTimer = () => {
     const handleStart = () => {
         const secs = digitsToSeconds(digits);
         setDuration(secs);
-        setKey((k) => k + 1); // restart timer
+        setKey((k) => k + 1);
         setIsPlaying(true);
         setInitialDigits(digits);
-    };
-
-    const handleStop = () => {
-        setIsPlaying(false);
+        setFinished(false);
+        setCanResume(true);
     };
 
     const handleReset = () => {
@@ -84,20 +86,12 @@ const CountdownTimer = () => {
         setDigits(initialDigits);
         setDuration(digitsToSeconds(initialDigits));
         setKey((k) => k + 1);
+        setCanResume(false);
+        setFinished(false);
     };
 
-    const handleAddMinute = () => {
-        // Add 60 seconds to the digits input
-        let total = digitsToSeconds(digits) + 60;
-        if (total > 359999) total = 359999; // max 99:59:59
-        const h = Math.floor(total / 3600)
-            .toString()
-            .padStart(2, "0");
-        const m = Math.floor((total % 3600) / 60)
-            .toString()
-            .padStart(2, "0");
-        const s = (total % 60).toString().padStart(2, "0");
-        setDigits(h + m + s);
+    const handleStop = () => {
+        setIsPlaying(false);
     };
 
     const [hh, mm, ss] = splitTimeDigits(digits);
@@ -111,8 +105,102 @@ const CountdownTimer = () => {
         }
     };
 
+    const handlePlayPause = () => {
+        if (isPlaying) {
+            setIsPlaying(false); // pause (stays resumable)
+            return;
+        }
+        if (canResume && duration > 0 && !finished) {
+            setIsPlaying(true); // resume where it left off
+            return;
+        }
+        const secs = digitsToSeconds(digits);
+        if (secs === 0) return;
+        setDuration(secs);
+        setKey((k) => k + 1);
+        setInitialDigits(digits);
+        setFinished(false);
+        setCanResume(true);
+        setIsPlaying(true);
+    };
+
+    const playAlarm = () => {
+        try {
+            const ctx = new (
+                window.AudioContext || window.webkitAudioContext
+            )();
+            [0, 0.4, 0.8].forEach((t) => {
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.connect(g);
+                g.connect(ctx.destination);
+                o.frequency.value = 880;
+                g.gain.setValueAtTime(0.2, ctx.currentTime + t);
+                o.start(ctx.currentTime + t);
+                o.stop(ctx.currentTime + t + 0.25);
+            });
+        } catch {}
+    };
+
+    const handleAddMinute = () => {
+        if (isPlaying) {
+            const newRemaining = Math.min(remainingRef.current + 60, 359999);
+            setDuration(newRemaining);
+            setKey((k) => k + 1); // remount with new duration, stays playing
+            setDigits(secondsToDigits(newRemaining));
+            return;
+        }
+        const total = Math.min(digitsToSeconds(digits) + 60, 359999);
+        setDigits(secondsToDigits(total));
+    };
+
+    const playPauseRef = useRef(handlePlayPause);
+    playPauseRef.current = handlePlayPause;
+    const addMinuteRef = useRef(handleAddMinute);
+    addMinuteRef.current = handleAddMinute;
+
+    useEffect(() => {
+        let rafId;
+        let prevTop = false;
+        let prevRight = false;
+        const TOP = 3; // X
+        const RIGHT = 1; // A
+
+        const poll = () => {
+            const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+            let top = false;
+            let right = false;
+            for (const pad of pads) {
+                if (!pad) continue;
+                if (pad.buttons[TOP]?.pressed) top = true;
+                if (pad.buttons[RIGHT]?.pressed) right = true;
+            }
+            if (top && !prevTop) addMinuteRef.current();
+            if (right && !prevRight) playPauseRef.current();
+            prevTop = top;
+            prevRight = right;
+            rafId = requestAnimationFrame(poll);
+        };
+
+        rafId = requestAnimationFrame(poll);
+        return () => cancelAnimationFrame(rafId);
+    }, []);
+
+    function secondsToDigits(total) {
+        const h = Math.floor(total / 3600)
+            .toString()
+            .padStart(2, "0");
+        const m = Math.floor((total % 3600) / 60)
+            .toString()
+            .padStart(2, "0");
+        const s = (total % 60).toString().padStart(2, "0");
+        return h + m + s;
+    }
+
     return (
-        <div className="countdown-timer-container">
+        <div
+            className={`countdown-timer-container${finished ? " finished" : ""}`}
+        >
             <div className="countdown-timer-input-row">
                 <div className="countdown-timer-input-group">
                     <input
@@ -161,21 +249,30 @@ const CountdownTimer = () => {
                     +1 min
                 </button>
             </div>
-            <div className="countdown-timer-circle">
+            <div className="countdown-timer-circle" onClick={handlePlayPause}>
                 <CountdownCircleTimer
                     key={key}
                     isPlaying={isPlaying}
                     duration={duration}
                     colors={["#646cff", "#f6f6ff"]}
-                    size={300}
+                    size={550}
                     strokeWidth={20}
-                    onComplete={() => setIsPlaying(false)}
+                    onComplete={() => {
+                        setIsPlaying(false);
+                        setFinished(true);
+                        setCanResume(false);
+                        playAlarm();
+                    }}
+                    rotation="counterclockwise"
                 >
-                    {({ remainingTime }) => (
-                        <span className="countdown-timer-time">
-                            {formatTime(remainingTime)}
-                        </span>
-                    )}
+                    {({ remainingTime }) => {
+                        remainingRef.current = remainingTime;
+                        return (
+                            <span className="countdown-timer-time">
+                                {formatTime(remainingTime)}
+                            </span>
+                        );
+                    }}
                 </CountdownCircleTimer>
             </div>
         </div>

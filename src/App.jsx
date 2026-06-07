@@ -3,6 +3,7 @@ import Banner from "./components/Banner/Banner.jsx";
 import AppRoutes from "./AppRoutes.jsx";
 import STUDENT_LISTS from "./components/studentList";
 import { useState } from "react";
+import { GamepadProvider } from "./components/GamepadProvider.jsx";
 
 function App() {
     const [studentListKey, setStudentListKey] = useState(
@@ -11,13 +12,15 @@ function App() {
     const studentList = STUDENT_LISTS[studentListKey];
     return (
         <Router basename="/miss-geyers-classroom">
-            <Banner />
-            <AppRoutes
-                studentListKey={studentListKey}
-                setStudentListKey={setStudentListKey}
-                studentList={studentList}
-                studentListOptions={Object.keys(STUDENT_LISTS)}
-            />
+            <GamepadProvider>
+                <Banner />
+                <AppRoutes
+                    studentListKey={studentListKey}
+                    setStudentListKey={setStudentListKey}
+                    studentList={studentList}
+                    studentListOptions={Object.keys(STUDENT_LISTS)}
+                />
+            </GamepadProvider>
         </Router>
     );
 }
