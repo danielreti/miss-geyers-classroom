@@ -10,7 +10,7 @@ const STUDENT_LISTS = {
         "Aiden",
         "Willow",
         "Gabriella",
-        "George",
+        "Parsia",
         "Audrey",
         "Kiara",
         "Louis",
@@ -32,7 +32,6 @@ const STUDENT_LISTS = {
         "Hallie",
         "Nika",
         "Charlie",
-        "George",
         "Zion",
         "Aiden",
         "Oliver",
@@ -46,6 +45,8 @@ const STUDENT_LISTS = {
         "Timur",
         "Adam",
         "Ryker",
+        "Edward",
+        "Shehan",
     ],
 };
 
