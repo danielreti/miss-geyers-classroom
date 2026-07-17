@@ -70,6 +70,7 @@ const StudentPicker = ({ studentList }) => {
     const [rules, setRules] = useState([]);
     const [error, setError] = useState("");
     const [usedOpen, setUsedOpen] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
     const poolRef = useRef([]);
 
     // Responsive layout based on how many are picked at once
@@ -103,6 +104,7 @@ const StudentPicker = ({ studentList }) => {
 
     const startAnimation = () => {
         setResult([]);
+        setIsVisible(true);
 
         // Current pool of pickable students
         let pool = neverExclude
@@ -131,6 +133,9 @@ const StudentPicker = ({ studentList }) => {
             );
             if (!neverExclude) setUsed([...baseUsed, ...picked]);
             setAnimating(false);
+            const timer = setTimeout(() => {
+                setIsVisible(false);
+            }, 5000);
             return;
         }
 
@@ -152,6 +157,9 @@ const StudentPicker = ({ studentList }) => {
                 setAnimating(false);
             }
         }, 50);
+        const timer = setTimeout(() => {
+            setIsVisible(false);
+        }, 5000);
     };
 
     const resetPicker = () => {
@@ -285,14 +293,15 @@ const StudentPicker = ({ studentList }) => {
                                 "--picker-box-height": `${pickBoxHeight}px`,
                             }}
                         >
-                            {result.map((name, i) => (
-                                <div
-                                    key={i}
-                                    className="student-picker-slot student-picker-name-box"
-                                >
-                                    {name}
-                                </div>
-                            ))}
+                            {isVisible &&
+                                result.map((name, i) => (
+                                    <div
+                                        key={i}
+                                        className="student-picker-slot student-picker-name-box"
+                                    >
+                                        {name}
+                                    </div>
+                                ))}
                         </div>
                     ) : null}
                 </div>
